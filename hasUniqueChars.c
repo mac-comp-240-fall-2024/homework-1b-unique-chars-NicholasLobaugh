@@ -48,7 +48,8 @@ void checkInvalid(char * inputStr) {
 
     // if nextChar is invalid (31 or less or 127 as an ascii char code), then bail out
     if ((nextChar <= 31 ) || (nextChar == 127)) {
-      fprintf(stderr, "invalid character in string\n");
+      fprintf(stderr, "invalid character in string: ");
+      printf("%s\n", inputStr);
       exit(EXIT_FAILURE);
     }
   }
@@ -73,39 +74,25 @@ bool hasUniqueChars(char * inputStr) {
   unsigned long checkBitsexcl_amp = 0;  // for checking ! though @ 
 
   char nextChar;         // next character in string to check
-
-  // -------------------------------------------------------------
-  // This section contains code to display the initial values of checkBitsA_z
-  // and checkBitsexcl_amp, for debugging purposes. 
-  // It also illustrates how to use the seeBits function for debugging.
-  // Printed values should initially be all zeros
-  // TODO: remove or comment out this code when satisfied of function correctness
   
-  // char debug_str_A_z[128];
-  // strcpy(debug_str_A_z, "checkBitsA_z before: \n");
-  // seeBits(checkBitsA_z, debug_str_A_z);
-  
-  // char debug_str_excl_amp[128];
-  // strcpy(debug_str_excl_amp, "checkBitsexcl_amp before: \n");
-  // seeBits(checkBitsexcl_amp, debug_str_excl_amp);
-  // -------------------------------------------------------------
-  
-  // TODO: Declare additional variables you need here
-  unsigned long nextChar_bit_pos = 0;
+  unsigned long nextChar_bit_pos; // 8 bytes of 0s except for one 1 bit that will change position based on nextChar's value
 
   
   for(i = 0; i < strlen(inputStr); i++) {
     nextChar = inputStr[i];
+    nextChar_bit_pos = 1; // reset to 1 to be used later in place of "1" in order to preserve full 8 bytes and prevent overflow
 
-    printf("checkBitsA_z: %s\n", ulong_to_bin_str(checkBitsA_z));
-    printf("checkBitsexcl_amp: %s\n", ulong_to_bin_str(checkBitsexcl_amp));
+    // printf("checkBitsA_z: %s\n", ulong_to_bin_str(checkBitsA_z));
+    // printf("checkBitsexcl_amp: %s\n", ulong_to_bin_str(checkBitsexcl_amp));
 
     if (nextChar >= 65 && nextChar <= 126) {  // if "A" through "~"
-      nextChar_bit_pos = 1 << (nextChar - 65);
-      printf("nextChar: %c  nextChar_bit_pos: %s\n", nextChar, ulong_to_bin_str(nextChar_bit_pos));
-      printf("nextChar_bit_pos & checkBitsA_z: %lu\n", nextChar_bit_pos & checkBitsA_z);
+      nextChar_bit_pos = nextChar_bit_pos << (nextChar - 65);
+
+      // printf("nextChar: %c   value: %d   nextChar_bit_pos: %s\n", nextChar, nextChar, ulong_to_bin_str(nextChar_bit_pos));
+      // printf("nextChar_bit_pos & checkBitsA_z: %lu\n", nextChar_bit_pos & checkBitsA_z);
+
       if (nextChar_bit_pos & checkBitsA_z) { // if bitwise ANDing results in anything but 0 then return false, else add nextChar_bit_pos to checkBitsA_z
-        printf("returned false\n");
+        // printf("returned false\n");
         return false;
       }
       else {
@@ -113,38 +100,19 @@ bool hasUniqueChars(char * inputStr) {
       }
     }
     else if (nextChar >= 33 && nextChar <= 64) {  // if "!" through "@"
-      nextChar_bit_pos = 1 << (nextChar - 33);
-      printf("nextChar: %c  nextChar_bit_pos: %s\n", nextChar, ulong_to_bin_str(nextChar_bit_pos));
-      printf("nextChar_bit_pos & checkBitsexcl_amp: %lu\n", nextChar_bit_pos & checkBitsexcl_amp);
+      nextChar_bit_pos = nextChar_bit_pos << (nextChar - 33);
+
+      // printf("nextChar: %c   value: %d   nextChar_bit_pos: %s\n", nextChar, nextChar, ulong_to_bin_str(nextChar_bit_pos));
+      // printf("nextChar_bit_pos & checkBitsexcl_amp: %lu\n", nextChar_bit_pos & checkBitsexcl_amp);
+      
       if (nextChar_bit_pos & checkBitsexcl_amp) { // if bitwise ANDing results in anything but 0 then return false, else add nextChar_bit_pos to checkBitsexcl_amp
-        printf("returned false\n");
+        // printf("returned false\n");
         return false;
       }
       else {
         checkBitsexcl_amp = nextChar_bit_pos + checkBitsexcl_amp;
       }
     }
-
-
-    // -------------------------------------------------------------
-    // Below this are examples of debugging print statements you could use
-    // Move/use as makes sense for you!
-    // Modify to work on checkBitsexcl_amp
-    // TODO: Comment out or remove when your function works correctly
-    // printf("nextchar int value: %d\n", nextChar);
-    // char char_str[2] = "\0";
-    // char_str[0] = nextChar;
-
-    // strcpy(debug_str_A_z, "nextchar: ");
-    // strcat(debug_str_A_z, char_str);
-    // strcat(debug_str_A_z,", checkBitsA_z: \n");
-    // seeBits(checkBitsA_z, debug_str_A_z);
-
-    // strcpy(debug_str_excl_amp, "nextchar: ");
-    // strcat(debug_str_excl_amp, char_str);
-    // strcat(debug_str_excl_amp,", checkBitsexcl_amp: \n");
-    // seeBits(checkBitsexcl_amp, debug_str_excl_amp);
-    // ------------------------------------------------------------- 
   }
 
   // if through all the characters, then no duplicates found

@@ -53,7 +53,24 @@ int main() {
   
   // TODO: add your tests here
 
+  // Task 3 Test 1: Tests non-duplicated edge cases at ends of ranges separated by multiple spaces. This should be true and not fail.
+  strcpy(string3, "!  @  A  ~");
+  ok = hasUniqueChars(string3);
+  assert(ok);
 
+  // Task 3 Test 2: Tests all printable characters with no duplications. This should be true and not fail.
+  strcpy(string3, "!\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~");
+  ok = hasUniqueChars(string3);
+  assert(ok);
+
+  // Task 3 Test 3: Tests all printable characters with two duplications ("@" and "a"). This should return false.
+  strcpy(string3, "!\"#$%&\'()*+,-./0123456789:;<=>?@@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`aabcdefghijklmnopqrstuvwxyz{|}~");
+  ok = hasUniqueChars(string3);
+  assert(!(ok));
+
+  // Task 3 Test 4: Tests a nonprintable escape sequence character. This should trigger checkIvalid() and exit the program.
+  strcpy(string3, "escape \e");
+  ok = hasUniqueChars(string3);
 
   // NOTE: if you add a \n to any tests, this should cause the
   //       exit failure given. Keep this test last so you can check 
