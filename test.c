@@ -1,5 +1,7 @@
 /*
- * TODO: Add an appropriate descriptive comment here
+ * This file contains tests for the hasUniqueChars function.
+ *
+ * Author: Nicholas Lobaugh
  */
 
 #include <stdio.h>    // printf
